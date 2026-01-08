@@ -3,15 +3,11 @@
 Projet exemple de microservices structurés en **architecture hexagonale (Ports & Adapters)**.  
 Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, messaging), pour faciliter les tests, l’évolution et le remplacement des adapters.
 
----
-
 ## 🧭 Vision
 
 - **Microservices** : chaque service est autonome (code, DB, déploiement).
 - **Hexagonal** : le domaine ne dépend de rien.
 - **DDD-friendly** : bounded contexts clairs (Customer, Order, Product, Payment…).
-
----
 
 ## 🧱 Microservices
 
@@ -21,44 +17,39 @@ Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, me
 - `payment-service` : service de paiements
 - `gateway-proxy` : API Gateway point d’entrée dans l'univers des microservices de l'app
 
----
-
 ## 🗂️ Structure `customer-micros`  en archi hexagonale
 ```
 customer-microservice/
 ├── cmd/
 │   └── api/
-│       ├── main.go            # composition root (wiring)
-│       ├── routes.go          # register routes (gin/nethttp)
-│       └── container.go       # build dependencies (db, repos, usecases, handlers)
+│       ├── main.go                                         # composition root (wiring)
+│       ├── routes.go                                       # register routes (gin/nethttp)
+│       └── container.go                                    # build dependencies (db, repos, usecases, handlers)
 │
 ├── internal/
-│   ├── domain/                # OBJETS MÉTIER (purs)
-│   │   ├── customer.go        # objet métier Customer
-│   │   ├── address.go         # objet métier Address
-│   │   ├── valueobjects/      # Value Objects (validation métier)
-│   │   │   ├── email.go
-│   │   │   ├── phone.go
-│   │   │   └── zipcode.go
-│   │   └── errors.go          # erreurs métier
-│   │
-│   ├── application/           # USE CASES + PORTS
+│   ├── domain/                                             # 1️⃣ OBJETS MÉTIER (purs)
+│   │   ├── business_customer.go                            # objet métier Customer
+│   │   ├── business_address.go                             # objet métier Address
+│   │   ├── validator/          
+│   │   │   └── fieds_checker.go                            # validation des champs du métier
+│   │   └── errors.go                                       # erreurs métier
+│   │   │
+│   ├── application/                                        # 2️⃣ USE CASES + PORTS
 │   │   ├── ports/
 │   │   │   ├── in/
-│   │   │   │   ├── customer_uc.go
-│   │   │   │   └── address_uc.go
-│   │   │   └── out/
-│   │   │       ├── customer_service.go
-│   │   │       └── address_service.go
+│   │   │   │   ├── customer_in_port.go                     # InCustomerService port d'entrée exposé à l'extreieur
+|   |   |   |   └── address_in_port.go                      # InAddressService port d'entrée exposé à l'extreieur
+│   │   │   ├── out/
+|   |   |   │   ├── customer_out_port.go                    # OutCustomerService utilisé pour envoyer à l'exterieur
+|   |   |   |   └── address_out_port.go                     # OutAddressService utilisé pour envoyer à l'exterieur
+│   │   │   └── usecase/                                    # ✅ usecase implemente les input ports
+│   │   │       ├── customer_uc.go
+│   │   │       └── address_uc.go
 │   │   │
-│   │   └── usecase/
-│   │       ├── customer_service.go
-│   │       └── address_service.go
-│   │
-│   ├── infrastructure/        # ADAPTERS (extérieur)
+│   ├── infrastructure/                                     # 3️⃣ ADAPTERS (extérieur)
 │   │   ├── web/
 │   │   │   └── http/
-│   │   │       ├── handlers/
+│   │   │       ├── handlers/                               # hanlder avec gin-gonic
 │   │   │       │   ├── customer_handler.go
 │   │   │       │   └── address_handler.go
 │   │   │       ├── dtos/
@@ -70,23 +61,22 @@ customer-microservice/
 │   │   │           ├── customer_mapper.go
 │   │   │           └── address_mapper.go
 │   │   │
-│   │   └── persistence/
-│   │       └── postgres/
-│   │           ├── db.go
-│   │           ├── models/
-│   │           │   ├── customer_row.go
-│   │           │   └── address_row.go
-│   │           ├── mappers/
-│   │           │   ├── customer_mapper.go
-│   │           │   └── address_mapper.go
-│   │           └── repositories/
-│   │               ├── customer_repo.go
-│   │               └── address_repo.go
+│   │   ├──  persistence/                                   # save dans la **db**
+│   │   |       └── postgres/
+│   │   |           ├── db.go                               # db *sql.DB par exemple
+│   │   |           ├── models/
+│   │   |           │   ├── customer_table.go               # model de données de la table customers
+│   │   |           │   └── address_table.go                # model de données de la table addresses
+│   │   |           ├── mappers/
+│   │   |           │   ├── customer_mapper.go
+│   │   |           │   └── address_mapper.go
+│   │   |           └── repositories/
+│   │   |               ├── customer_out_port_impl.go       # impl du customer output port
+|   |   |               └── address_out_port_impl.go        # impl de address output port
+│   │   |
+│   ├── config/                                             # 4️⃣ la config des env vars
+│   │   └── config.go
 │   │
-│   ├── config/
-│   │   ├── config.go
-│   │   └── logger.go
-│
 ├── migrations/
 │   ├── 001_create_addresses.sql
 │   └── 002_create_customers.sql
