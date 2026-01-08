@@ -49,7 +49,7 @@ customer-microservice/
 │   ├── infrastructure/                                     # 3️⃣ ADAPTERS (extérieur)
 │   │   ├── web/
 │   │   │   └── http/
-│   │   │       ├── handlers/                               # hanlder avec gin-gonic
+│   │   │       ├── handlers/                               # hanlder avec **gin-gonic**
 │   │   │       │   ├── customer_handler.go
 │   │   │       │   └── address_handler.go
 │   │   │       ├── dtos/
