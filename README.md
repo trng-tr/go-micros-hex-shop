@@ -1,4 +1,4 @@
-# HexaShop (Microservices + Architecture Hexagonale)
+# HexaShop : Microservices + Archi Hexagonale
 
 Projet exemple de microservices structurés en **architecture hexagonale (Ports & Adapters)**.  
 Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, messaging), pour faciliter les tests, l’évolution et le remplacement des adapters.
@@ -23,7 +23,7 @@ Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, me
 
 ---
 
-## 🗂️ Structure `customer-microservice`  en archi hexagonale
+## 🗂️ Structure `customer-micros`  en archi hexagonale
 ```
 customer-microservice/
 ├── cmd/
