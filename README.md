@@ -49,7 +49,7 @@ customer-microservice/
 │   ├── infrastructure/                                     # 3️⃣ ADAPTERS (extérieur)
 │   │   ├── web/
 │   │   │   └── http/
-│   │   │       ├── handlers/                               # hanlder avec **gin-gonic**
+│   │   │       ├── handlers/                               # hanlder avec gin-gonic
 │   │   │       │   ├── customer_handler.go
 │   │   │       │   └── address_handler.go
 │   │   │       ├── dtos/
@@ -61,7 +61,7 @@ customer-microservice/
 │   │   │           ├── customer_mapper.go
 │   │   │           └── address_mapper.go
 │   │   │
-│   │   ├──  persistence/                                   # save dans la **db**
+│   │   ├──  persistence/                                   # save dans la db
 │   │   |       └── postgres/
 │   │   |           ├── db.go                               # db *sql.DB par exemple
 │   │   |           ├── models/
