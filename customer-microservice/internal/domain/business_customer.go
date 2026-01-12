@@ -1,6 +1,8 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 type BusinessCustomer struct {
 	ID          int64
@@ -11,15 +13,15 @@ type BusinessCustomer struct {
 	PhoneNumber string
 	Status      Status
 	AddressID   int64
-	CreatedAt   time.Time //ex:2026-01-07 14:42:18.123456789 +0000 UTC
-	UpdatedAt   string
+	CreatedAt   time.Time  //ex:2026-01-07 14:42:18.123456789 +0000 UTC
+	UpdatedAt   *time.Time //because it is not mandatory
 }
 
 type Genda string
 
 const (
-	Femal Genda = "F"
-	Male  Genda = "M"
+	Female Genda = "F"
+	Male   Genda = "M"
 )
 
 type Status string
@@ -30,13 +32,36 @@ const (
 	Deleted   Status = "DELETED"
 )
 
-type BusinessAddress struct {
-	ID           int64
-	StreetNumber string
-	StreetName   string
-	ZipCode      string
-	City         string
-	Region       string
-	Country      string
-	Complement   string
+// PatchBusinessCustomer pour la mise à jour de certains champs
+type PatchBusinessCustomer struct {
+	Firstname   *string
+	Lastname    *string
+	Email       *string
+	PhoneNumber *string
+	AddressID   *int64
+}
+
+func (bs *BusinessCustomer) ApplyPatchCustomer(patch PatchBusinessCustomer) {
+	if patch.Firstname != nil {
+		bs.Firstname = *patch.Firstname
+	}
+	if patch.Lastname != nil {
+		bs.Lastname = *patch.Lastname
+	}
+	if patch.Email != nil {
+		bs.Email = *patch.Email
+	}
+	if patch.PhoneNumber != nil {
+		bs.PhoneNumber = *patch.PhoneNumber
+	}
+	if patch.AddressID != nil {
+		bs.AddressID = *patch.AddressID
+	}
+
+	bs.applyPatchUpdateDate()
+}
+
+func (bs *BusinessCustomer) applyPatchUpdateDate() {
+	now := time.Now()
+	bs.UpdatedAt = &now
 }
