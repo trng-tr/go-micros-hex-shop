@@ -31,8 +31,8 @@ customer-microservice/
 │   │   ├── business_customer.go                            # BusinessCustomer objet métier Customer
 │   │   ├── business_address.go                             # BusinessAddress objet métier Address
 │   │   ├── validator/          
-│   │   │   └── fieds_checker.go                            # validation des champs du métier
-│   │   └── errors.go                                       # erreurs métier
+│   │   │   ├── fieds_checker.go                            # validation des champs du métier
+│   │       └── errors.go                                       # erreurs métier
 │   │   │
 │   ├── application/                                        # 2️⃣ USE CASES + PORTS
 │   │   ├── ports/
