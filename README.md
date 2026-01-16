@@ -1,7 +1,7 @@
 # HexaShop : Microservices + Archi Hexagonale
 
 Projet exemple de microservices structurés en **architecture hexagonale (Ports & Adapters)**.  
-Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, messaging), pour faciliter les tests, l’évolution et le remplacement des adapters.
+Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, messaging), pour faciliter les tests, l’évolutivité et le remplacement des adapters, etc.
 
 ## 🧭 Vision
 
@@ -11,10 +11,10 @@ Objectif : isoler le **domaine** (métier) des détails techniques (HTTP, DB, me
 
 ## 🧱 Microservices
 
-- `customer-service` : gestion des clients et leurs adresses
-- `product-service` : catalogue de produits et leur quantité en stock
-- `order-service` : commandes, lignes de commande effectuées par les customers, 
-- `payment-service` : service de paiements
+- `customer-microservice` : gestion des clients et leurs adresses
+- `product-microservice` : catalogue de produits et leur quantité en stock
+- `order-microservice` : commandes, lignes de commande effectuées par les customers, 
+- `payment-microservice` : microservice de paiements
 - `gateway-proxy` : API Gateway point d’entrée dans l'univers des microservices de l'app
 
 ## 🗂️ Structure `customer-microservice`  en archi hexagonale
@@ -23,8 +23,6 @@ customer-microservice/
 ├── cmd/
 │   └── api/
 │       ├── main.go                                         # composition root (wiring)
-│       ├── routes.go                                       # register routes (gin/nethttp)
-│       └── container.go                                    # build dependencies (db, repos, usecases, handlers)
 │
 ├── internal/
 │   ├── domain/                                             # 1️⃣ OBJETS MÉTIER (purs)
@@ -46,18 +44,16 @@ customer-microservice/
 │   │   │       ├── customer_usecase.go
 │   │   │       └── address_usecase.go
 │   │   │
-│   ├── infrastructure/                                     # 3️⃣ ADAPTERS (extérieur)
+│   ├── infrastructure/                                     # 3️⃣ ADAPTERS (extérieur)         
 │   │   ├── in/
-│   │   │   └── http/
+│   │   │   └── web/
 │   │   │       ├── handlers/
-|   |   |       |   ├── contract/                           # hanlder: gin-gonic
-│   │   │       │   |    ├── customer_handler.go            # interface CustomerHandlerService 
-│   │   │       │   |    └── address_handler.go             # interface AddressHandlerService 
-|   |   |       |   ├── impl/ 
-|   |   |       |   |     ├── customer_handler_impl.go       # impl CustomerHandlerService 
-│   │   │       │   |     └── address_handler_impl.go        # implAddressHandlerService        
-|   |   |       ├── routes/
-|   |   |       |   └── route_register.go                   # engeristrement des routes: gin.Engine                                 
+|   |   |       |   ├── customer_handler_impl.go            # impl CustomerHandlerService 
+│   │   │       │   └── address_handler_impl.go             # implAddressHandlerService        
+|   |   |       ├── routes/                                 # register routes 
+|   |   |       |   ├── customer_handler.go                 # interface CustomerHandlerService: gin-gonic
+|   |   |       |   ├── address_handler.go                  # implAddressHandlerService : gin-gonic   
+|   |   |       |   └── route_register.go                   # engeristrement des routes: gin                        
 │   │   │       ├── dtos/                                   # ✅  les user dtos                             
 │   │   │       │   ├── customer_request.go
 │   │   │       │   ├── customer_response.go
@@ -67,7 +63,7 @@ customer-microservice/
 │   │   │           ├── customer_mapper.go
 │   │   │           └── address_mapper.go
 │   │   │
-│   │   ├──  out/                                           # ✅ save dans la db
+│   │   ├── out/                                           # ✅ save dans la db
 │   │   |       └── services/                       
 │   │   |           ├── db.go                               # db *sql.DB par exemple
 │   │   |           ├── models/
@@ -77,15 +73,15 @@ customer-microservice/
 │   │   |           │   ├── customer_mapper.go
 │   │   |           │   └── address_mapper.go
 |   |   |           ├── repositories                        # ✅ la couche de données (db)
-|   |   |           |   ├── contract/
-|   |   |           |       ├── generic_repos.go            # repo generic pour ne pas répéter les méthodes Save dans chaque repo
-|   |   |           |       └── real_repos.go               # real repo extends generic repo définissant les models de données réelles
+|   |   |           |   ├── customer_address_repos_impl.go  # implementation des customer et address repos 
 │   │   |           └── services/                           # ✅ implementation des outputs ports
+|   |   |               ├── generic_repos.go                # repo generic de centralisation des méthodes
+|   |   |               ├── customer_address_repos.go       # real repo extends generic repo 
 │   │   |               ├── customer_out_port_impl.go       # OutCustomerServiceImpl impl du customer output port
 |   |   |               └── address_out_port_impl.go        # OutAddressServiceImpl impl de address output port
 │   │   |
-│   ├── config/                                             # 4️⃣ la config des env vars
-│   │   └── config.go
+│   |   ├── config/                                          # 4️⃣ la config des env vars
+│   │       └── config.go
 │   │
 ├── migrations/
 │   ├── 001_create_addresses.sql
@@ -95,3 +91,4 @@ customer-microservice/
 ├── go.mod
 └── README.md
 ```
+**Note**: Les autres microservices: product-microservice, order-microservice payment-microservice possèdent le même organigramme.

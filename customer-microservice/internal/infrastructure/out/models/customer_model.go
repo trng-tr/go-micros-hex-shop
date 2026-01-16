@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// Customer model of data for table customers
-type Customer struct {
+// CustomerModel model of data for table customers
+type CustomerModel struct {
 	ID          int64
 	Firstname   string
 	Lastname    string

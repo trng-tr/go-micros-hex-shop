@@ -22,7 +22,7 @@ func NewAddressRepositoryImpl(db *sql.DB) *AddressRepositoryImpl {
 }
 
 // SaveO implement interface AddressRepository
-func (ari *AddressRepositoryImpl) SaveO(ctx context.Context, o models.Address) (models.Address, error) {
+func (ari *AddressRepositoryImpl) SaveO(ctx context.Context, o models.AddressModel) (models.AddressModel, error) {
 	var query string = `INSERT INTO addresses (street_number,street_name,zip_code,city,region,country,complement)
 	VALUES(
 	$1,$2,$3,$4,$5,$6,$7)
@@ -40,18 +40,18 @@ func (ari *AddressRepositoryImpl) SaveO(ctx context.Context, o models.Address) (
 		o.Complement,
 	).Scan(&o.ID)
 	if err != nil {
-		return models.Address{}, fmt.Errorf("an error occurred %w", err)
+		return models.AddressModel{}, fmt.Errorf("an error occurred %w", err)
 	}
 
 	return o, nil
 }
 
 // FindOByID implement interface AddressRepository
-func (ari *AddressRepositoryImpl) FindOByID(ctx context.Context, id int64) (models.Address, error) {
+func (ari *AddressRepositoryImpl) FindOByID(ctx context.Context, id int64) (models.AddressModel, error) {
 	var query string = `SELECT id,street_number,street_name,zip_code,city,region,country,complement
 	FROM addresses
 	WHERE id=$1`
-	var address models.Address
+	var address models.AddressModel
 	var err error = ari.db.QueryRowContext(ctx, query, id).Scan(
 		&address.ID,
 		&address.StreetNumber,
@@ -63,23 +63,23 @@ func (ari *AddressRepositoryImpl) FindOByID(ctx context.Context, id int64) (mode
 		&address.Complement,
 	)
 	if err != nil {
-		return models.Address{}, fmt.Errorf("an error occurred %w", err)
+		return models.AddressModel{}, fmt.Errorf("an error occurred %w", err)
 	}
 	return address, nil
 }
 
 // FindAllO implement interface AddressRepository
-func (ari *AddressRepositoryImpl) FindAllO(ctx context.Context) ([]models.Address, error) {
+func (ari *AddressRepositoryImpl) FindAllO(ctx context.Context) ([]models.AddressModel, error) {
 	var query string = `SELECT id,street_number,street_name,zip_code,city,region,country,complement
 	FROM addresses`
 	rows, err := ari.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
-	var addresses []models.Address = make([]models.Address, 0)
+	var addresses []models.AddressModel = make([]models.AddressModel, 0)
 	for rows.Next() {
-		var address models.Address
-		rows.Scan(
+		var address models.AddressModel
+		if err := rows.Scan(
 			&address.ID,
 			&address.StreetNumber,
 			&address.StreetName,
@@ -88,8 +88,14 @@ func (ari *AddressRepositoryImpl) FindAllO(ctx context.Context) ([]models.Addres
 			&address.Region,
 			&address.Country,
 			&address.Complement,
-		)
+		); err != nil {
+			return nil, err
+		}
 		addresses = append(addresses, address)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 
 	return addresses, nil

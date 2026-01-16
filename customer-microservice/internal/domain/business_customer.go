@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type BusinessCustomer struct {
+type Customer struct {
 	ID          int64
 	Firstname   string
 	Lastname    string
@@ -41,7 +41,7 @@ type PatchBusinessCustomer struct {
 	AddressID   *int64
 }
 
-func (bs *BusinessCustomer) ApplyPatchCustomer(patch PatchBusinessCustomer) {
+func (bs *Customer) ApplyPatchCustomer(patch PatchBusinessCustomer) {
 	if patch.Firstname != nil {
 		bs.Firstname = *patch.Firstname
 	}
@@ -61,7 +61,7 @@ func (bs *BusinessCustomer) ApplyPatchCustomer(patch PatchBusinessCustomer) {
 	bs.applyPatchUpdateDate()
 }
 
-func (bs *BusinessCustomer) applyPatchUpdateDate() {
+func (bs *Customer) applyPatchUpdateDate() {
 	now := time.Now()
 	bs.UpdatedAt = &now
 }

@@ -8,8 +8,8 @@ import (
 
 // AddressService port d'entrée exposé par l'app à l'exterieur
 type InAddressService interface {
-	CreateAddress(ctx context.Context, bsAddress domain.BusinessAddress) (domain.BusinessAddress, error)
-	GetAddressByID(ctx context.Context, id int64) (domain.BusinessAddress, error)
-	GetAllAddresses(ctx context.Context) ([]domain.BusinessAddress, error)
+	CreateAddress(ctx context.Context, bsAddress domain.Address) (domain.Address, error)
+	GetAddressByID(ctx context.Context, id int64) (domain.Address, error)
+	GetAllAddresses(ctx context.Context) ([]domain.Address, error)
 	DeleteAddress(ctx context.Context, id int64) error
 }

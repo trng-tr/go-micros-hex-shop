@@ -25,51 +25,50 @@ func NewInCustomerServiceImpl(outCustomerSvc out.OutCustomerService, outAddressS
 }
 
 // CreateCustomer implement interface InCustomerService
-func (icsi *InCustomerServiceImpl) CreateCustomer(ctx context.Context, bsCustomer domain.BusinessCustomer) (domain.BusinessCustomer, error) {
+func (icsi *InCustomerServiceImpl) CreateCustomer(ctx context.Context, bsCustomer domain.Customer) (domain.Customer, error) {
 	var inputFields map[string]string = map[string]string{
 		"firstname": bsCustomer.Firstname,
 		"lastname":  bsCustomer.Lastname,
-		"genda":     string(bsCustomer.Genda),
 		"email":     bsCustomer.Email,
 		"phone":     bsCustomer.PhoneNumber,
 	}
 	if err := validators.CheckInputFields(inputFields); err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 	if err := validators.CheckInputGenda(bsCustomer.Genda); err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 	if ok := validators.CheckEmailValid(bsCustomer.Email); !ok {
-		return domain.BusinessCustomer{}, fmt.Errorf("error: invalid input email %s", bsCustomer.Email)
+		return domain.Customer{}, fmt.Errorf("error: invalid input email %s", bsCustomer.Email)
 	}
 	if err := validators.CheckPhoneValid(bsCustomer.PhoneNumber); err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 
 	bsCustomer.CreatedAt = validators.GenerateDate()
 	bsCustomer.Status = domain.Active
 	//check address
 	if _, err := icsi.outAddressSvc.GetAddressByID(ctx, bsCustomer.AddressID); err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 	// send business object to outside using output port
 	sentBsCustomer, err := icsi.outCustomerSvc.CreateCustomer(ctx, bsCustomer)
 	if err != nil {
-		return domain.BusinessCustomer{}, fmt.Errorf("save customer failed %w", err)
+		return domain.Customer{}, fmt.Errorf("save customer failed %w", err)
 	}
 
 	return sentBsCustomer, nil
 }
 
 // GetCustomerByID implement interface InCustomerService
-func (icsi *InCustomerServiceImpl) GetCustomerByID(ctx context.Context, id int64) (domain.BusinessCustomer, error) {
+func (icsi *InCustomerServiceImpl) GetCustomerByID(ctx context.Context, id int64) (domain.Customer, error) {
 	if err := validators.CheckInputId(id); err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 
 	bsCustomer, err := icsi.outCustomerSvc.GetCustomerByID(ctx, id)
 	if err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 
 	return bsCustomer, nil
@@ -77,26 +76,26 @@ func (icsi *InCustomerServiceImpl) GetCustomerByID(ctx context.Context, id int64
 }
 
 // GetAllCustomers implement interface InCustomerService
-func (icsi *InCustomerServiceImpl) GetAllCustomers(ctx context.Context) ([]domain.BusinessCustomer, error) {
+func (icsi *InCustomerServiceImpl) GetAllCustomers(ctx context.Context) ([]domain.Customer, error) {
 	// call output port to retrieve all customers
 	return icsi.outCustomerSvc.GetAllCustomers(ctx)
 }
 
 // UpdateCustomer implement interface InCustomerService
-func (icsi *InCustomerServiceImpl) PatchCustomer(ctx context.Context, id int64, patchCustomer domain.PatchBusinessCustomer) (domain.BusinessCustomer, error) {
+func (icsi *InCustomerServiceImpl) PatchCustomer(ctx context.Context, id int64, patchCustomer domain.PatchBusinessCustomer) (domain.Customer, error) {
 	if err := validators.CheckInputId(id); err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 	businessCustomer, err := icsi.outCustomerSvc.GetCustomerByID(ctx, id)
 	if err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 	businessCustomer.ApplyPatchCustomer(patchCustomer) //mapper for patch request
 
 	// call outputservice to save changes
 	sentUpdatedCustomer, err := icsi.outCustomerSvc.PatchCustomer(ctx, id, businessCustomer)
 	if err != nil {
-		return domain.BusinessCustomer{}, err
+		return domain.Customer{}, err
 	}
 
 	return sentUpdatedCustomer, nil

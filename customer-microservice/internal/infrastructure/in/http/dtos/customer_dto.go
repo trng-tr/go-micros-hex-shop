@@ -6,11 +6,11 @@ import (
 
 // CustomerRequest create request
 type CustomerRequest struct {
-	Firstname   string `json:"firstname" binding:"required,min=2"`
-	Lastname    string `json:"lastname" binding:"required,min=2"`
-	Genda       string `json:"genda" binding:"required,min=1"`
-	Email       string `json:"email" binding:"required,min=5"`
-	PhoneNumber string `json:"phone_number" binding:"required,min=8,max=20"`
+	Firstname   string `json:"firstname" binding:"required"`
+	Lastname    string `json:"lastname" binding:"required"`
+	Genda       string `json:"genda" binding:"required"`
+	Email       string `json:"email" binding:"required"`
+	PhoneNumber string `json:"phone_number" binding:"required"`
 	AddressID   int64  `json:"address_id" binding:"required"`
 }
 
@@ -18,8 +18,8 @@ type CustomerRequest struct {
 type CustomerPatchRequest struct {
 	Firstname   *string `json:"firstname,omitempty" binding:"omitempty,min=2"`
 	Lastname    *string `json:"lastname,omitempty" binding:"omitempty,min=2"`
-	Email       *string `json:"email,omitempty" binding:"omitempty,email"`
-	PhoneNumber *string `json:"phone_number,omitempty" binding:"omitempty"`
+	Email       *string `json:"email,omitempty" binding:"omitempty,min=5"`
+	PhoneNumber *string `json:"phone_number,omitempty" binding:"omitempty,min=8,max=20"`
 	AddressID   *int64  `json:"address_id,omitempty" binding:"omitempty,gt=0"`
 }
 

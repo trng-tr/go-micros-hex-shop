@@ -1,4 +1,4 @@
-package impl
+package handlers
 
 import (
 	"net/http"
@@ -139,6 +139,6 @@ func (ch *CustomerHandlerServiceImpl) CustomerHandleDelete(c *gin.Context) {
 }
 
 // buildCustomerResponse util function
-func buildCustomerResponse(bsC domain.BusinessCustomer, bsA domain.BusinessAddress) dtos.CustomerResponse {
+func buildCustomerResponse(bsC domain.Customer, bsA domain.Address) dtos.CustomerResponse {
 	return mappers.ToCustomerResponse(bsC, bsA)
 }

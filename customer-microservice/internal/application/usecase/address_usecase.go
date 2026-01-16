@@ -24,7 +24,7 @@ func NewInAddressServiceImpl(outService out.OutAddressService) *InAddressService
 }
 
 // CreateAddress implement InAddressService interface
-func (iasi *InAddressServiceImpl) CreateAddress(ctx context.Context, bsAddress domain.BusinessAddress) (domain.BusinessAddress, error) {
+func (iasi *InAddressServiceImpl) CreateAddress(ctx context.Context, bsAddress domain.Address) (domain.Address, error) {
 	var inputFields map[string]string = map[string]string{
 		"street_name": bsAddress.StreetName,
 		"zip_code":    bsAddress.ZipCode,
@@ -34,33 +34,36 @@ func (iasi *InAddressServiceImpl) CreateAddress(ctx context.Context, bsAddress d
 	}
 	var err error = validators.CheckInputFields(inputFields)
 	if err != nil {
-		return domain.BusinessAddress{}, err
+		return domain.Address{}, err
+	}
+	if err := validators.CheckZipCode(bsAddress.ZipCode); err != nil {
+		return domain.Address{}, err
 	}
 	// send business object to outside using output port
 	sendBsAddress, err := iasi.outService.CreateAddress(ctx, bsAddress)
 	if err != nil {
-		return domain.BusinessAddress{}, fmt.Errorf("%w", errSendObject.Error())
+		return domain.Address{}, fmt.Errorf("%w:%v", errSendObject, err)
 	}
 
 	return sendBsAddress, nil
 }
 
 // GetAddressByID implement InAddressService interface
-func (iasi *InAddressServiceImpl) GetAddressByID(ctx context.Context, id int64) (domain.BusinessAddress, error) {
+func (iasi *InAddressServiceImpl) GetAddressByID(ctx context.Context, id int64) (domain.Address, error) {
 	if err := validators.CheckInputId(id); err != nil {
-		return domain.BusinessAddress{}, err
+		return domain.Address{}, err
 	}
 	//call output port to retried business address object
 	bsAddress, err := iasi.outService.GetAddressByID(ctx, id)
 	if err != nil {
-		return domain.BusinessAddress{}, fmt.Errorf("%w", errRetrieveObject)
+		return domain.Address{}, fmt.Errorf("%w:%v", errRetrieveObject, err)
 	}
 
 	return bsAddress, nil
 }
 
 // GetAllAddresses implement InAddressService interface
-func (iasi *InAddressServiceImpl) GetAllAddresses(ctx context.Context) ([]domain.BusinessAddress, error) {
+func (iasi *InAddressServiceImpl) GetAllAddresses(ctx context.Context) ([]domain.Address, error) {
 	addresses, err := iasi.outService.GetAllAddresses(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("an arror has occurred %w", err)

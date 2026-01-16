@@ -7,7 +7,7 @@ import (
 	"github.com/trng-tr/customer-microservice/internal/infrastructure/out/models"
 )
 
-func ToAddressModel(bs domain.BusinessAddress) models.Address {
+func ToAddressModel(bs domain.Address) models.AddressModel {
 	var complement sql.NullString
 	if bs.Complement != nil {
 		complement = sql.NullString{
@@ -24,7 +24,7 @@ func ToAddressModel(bs domain.BusinessAddress) models.Address {
 		}
 	}
 
-	return models.Address{
+	return models.AddressModel{
 		ID:           bs.ID,
 		StreetNumber: streetNumber,
 		StreetName:   bs.StreetName,
@@ -36,7 +36,7 @@ func ToAddressModel(bs domain.BusinessAddress) models.Address {
 	}
 }
 
-func ToBusinessAddress(m models.Address) domain.BusinessAddress {
+func ToBusinessAddress(m models.AddressModel) domain.Address {
 	var complement *string
 	if m.Complement.Valid == true {
 		complement = &m.Complement.String
@@ -47,7 +47,7 @@ func ToBusinessAddress(m models.Address) domain.BusinessAddress {
 	if m.StreetNumber.Valid {
 		streetNumber = &m.StreetNumber.String
 	}
-	return domain.BusinessAddress{
+	return domain.Address{
 		ID:           m.ID,
 		StreetNumber: streetNumber,
 		StreetName:   m.StreetName,

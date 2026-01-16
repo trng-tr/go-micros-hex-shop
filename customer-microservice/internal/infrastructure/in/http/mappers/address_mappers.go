@@ -5,8 +5,8 @@ import (
 	"github.com/trng-tr/customer-microservice/internal/infrastructure/in/http/dtos"
 )
 
-func ToBusinessAddress(request dtos.AddressRequest) domain.BusinessAddress {
-	return domain.BusinessAddress{
+func ToBusinessAddress(request dtos.AddressRequest) domain.Address {
+	return domain.Address{
 		StreetNumber: request.StreetNumber,
 		StreetName:   request.StreetName,
 		ZipCode:      request.ZipCode,
@@ -17,7 +17,7 @@ func ToBusinessAddress(request dtos.AddressRequest) domain.BusinessAddress {
 	}
 }
 
-func ToAddressResponse(bs domain.BusinessAddress) dtos.AddressResponse {
+func ToAddressResponse(bs domain.Address) dtos.AddressResponse {
 	return dtos.AddressResponse{
 		ID:           bs.ID,
 		StreetNumber: bs.StreetNumber,

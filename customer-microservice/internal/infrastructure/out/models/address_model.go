@@ -2,8 +2,8 @@ package models
 
 import "database/sql"
 
-//Address model of data for table addresses
-type Address struct {
+//AddressModel model of data for table addresses
+type AddressModel struct {
 	ID           int64
 	StreetNumber sql.NullString //because it is not mandatory
 	StreetName   string

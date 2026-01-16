@@ -5,8 +5,8 @@ import (
 	"github.com/trng-tr/customer-microservice/internal/infrastructure/in/http/dtos"
 )
 
-func ToBusinessCustomer(request dtos.CustomerRequest) domain.BusinessCustomer {
-	return domain.BusinessCustomer{
+func ToBusinessCustomer(request dtos.CustomerRequest) domain.Customer {
+	return domain.Customer{
 		Firstname:   request.Firstname,
 		Lastname:    request.Lastname,
 		Genda:       domain.Genda(request.Genda),
@@ -16,7 +16,7 @@ func ToBusinessCustomer(request dtos.CustomerRequest) domain.BusinessCustomer {
 	}
 }
 
-func ToCustomerResponse(bs domain.BusinessCustomer, bsAddress domain.BusinessAddress) dtos.CustomerResponse {
+func ToCustomerResponse(bs domain.Customer, bsAddress domain.Address) dtos.CustomerResponse {
 	return dtos.CustomerResponse{
 		ID:              bs.ID,
 		Firstname:       bs.Firstname,

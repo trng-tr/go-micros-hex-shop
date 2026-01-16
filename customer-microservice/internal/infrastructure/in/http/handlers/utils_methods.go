@@ -1,4 +1,4 @@
-package impl
+package handlers
 
 import (
 	"errors"

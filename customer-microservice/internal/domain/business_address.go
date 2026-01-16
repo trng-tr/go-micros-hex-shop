@@ -1,6 +1,6 @@
 package domain
 
-type BusinessAddress struct {
+type Address struct {
 	ID           int64
 	StreetNumber *string
 	StreetName   string

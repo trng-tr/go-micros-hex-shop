@@ -15,6 +15,8 @@ func CheckInputFields(fileds map[string]string) error {
 		value = strings.TrimSpace(value)
 		if value == "" {
 			return fmt.Errorf("%w %s", errEmptyFields, key)
+		} else if len(value) < 2 {
+			return fmt.Errorf("%w %s", errTooShort, key)
 		} else if len(value) > 255 {
 			return fmt.Errorf("%w %s", errTooLong, key)
 		}
@@ -26,6 +28,8 @@ func CheckInputFields(fileds map[string]string) error {
 
 func CheckEmailValid(email string) bool {
 	if _, err := mail.ParseAddress(email); err != nil {
+		return false
+	} else if len(email) < 5 {
 		return false
 	}
 	return true
@@ -50,7 +54,7 @@ func CheckInputId(id int64) error {
 }
 
 func CheckPhoneValid(phone string) error {
-	var regex = regexp.MustCompile(`^\+?[0-9]{8,15}$`)
+	var regex = regexp.MustCompile(`^\+?[0-9]{8,20}$`)
 	if regex.MatchString(phone) {
 		return nil
 	}
@@ -60,4 +64,12 @@ func CheckPhoneValid(phone string) error {
 
 func GenerateDate() time.Time {
 	return time.Now()
+}
+
+func CheckZipCode(zip string) error {
+	if len(zip) < 4 || len(zip) > 10 {
+		return fmt.Errorf("%w", errInvalidZipCode)
+	}
+
+	return nil
 }

@@ -1,19 +1,22 @@
 package routes
 
+/*en Go, les interfaces sont du côte de celui qui les utilise(DI)
+et non pas du coté de cui qui les implémente, ici c'est la route
+qui les injecte
+*/
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/trng-tr/customer-microservice/internal/infrastructure/in/http/handlers/contract"
 )
 
 // RoutesRegister struct to use interface contract.AddressHandlerService
 type RoutesRegistration struct {
-	addressHandler  contract.AddressHandlerService
-	customerHandler contract.CustomerHandlerService
+	addressHandler  AddressHandlerService
+	customerHandler CustomerHandlerService
 }
 
 // NewRoutesRegistration DI par constructeur
-func NewRoutesRegistration(addressHandler contract.AddressHandlerService,
-	customerHandler contract.CustomerHandlerService) *RoutesRegistration {
+func NewRoutesRegistration(addressHandler AddressHandlerService,
+	customerHandler CustomerHandlerService) *RoutesRegistration {
 	return &RoutesRegistration{
 		addressHandler:  addressHandler,
 		customerHandler: customerHandler,

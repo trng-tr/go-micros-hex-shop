@@ -8,9 +8,9 @@ import (
 
 // OutCustomerService port de sortie utilisé par l'app pour envoyer à l'exterieur
 type OutCustomerService interface {
-	CreateCustomer(ctx context.Context, customer domain.BusinessCustomer) (domain.BusinessCustomer, error)
-	GetCustomerByID(ctx context.Context, id int64) (domain.BusinessCustomer, error)
-	GetAllCustomers(ctx context.Context) ([]domain.BusinessCustomer, error)
-	PatchCustomer(ctx context.Context, id int64, businessCustomer domain.BusinessCustomer) (domain.BusinessCustomer, error)
+	CreateCustomer(ctx context.Context, customer domain.Customer) (domain.Customer, error)
+	GetCustomerByID(ctx context.Context, id int64) (domain.Customer, error)
+	GetAllCustomers(ctx context.Context) ([]domain.Customer, error)
+	PatchCustomer(ctx context.Context, id int64, businessCustomer domain.Customer) (domain.Customer, error)
 	DeleteCustomer(ctx context.Context, id int64) error
 }

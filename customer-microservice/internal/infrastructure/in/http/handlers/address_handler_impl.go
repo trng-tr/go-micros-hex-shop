@@ -1,4 +1,4 @@
-package impl
+package handlers
 
 import (
 	"net/http"
@@ -31,7 +31,7 @@ func (ahsi AddressHandlerServiceImpl) AddressHandleCreate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, dtos.NewResponse(fail, err.Error()))
 		return
 	}
-	var businessAddress domain.BusinessAddress = mappers.ToBusinessAddress(addressRequest)
+	var businessAddress domain.Address = mappers.ToBusinessAddress(addressRequest)
 	createdAddress, err := ahsi.inputPortSvc.CreateAddress(c.Request.Context(), businessAddress)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, dtos.NewResponse(fail, err.Error()))

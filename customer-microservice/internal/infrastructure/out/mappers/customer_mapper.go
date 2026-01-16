@@ -9,7 +9,7 @@ import (
 	"github.com/trng-tr/customer-microservice/internal/infrastructure/out/models"
 )
 
-func ToCustomerModel(bs domain.BusinessCustomer) models.Customer {
+func ToCustomerModel(bs domain.Customer) models.CustomerModel {
 	var updatedAt sql.NullTime
 	if bs.UpdatedAt != nil {
 		updatedAt = sql.NullTime{
@@ -18,7 +18,7 @@ func ToCustomerModel(bs domain.BusinessCustomer) models.Customer {
 		}
 	}
 
-	return models.Customer{
+	return models.CustomerModel{
 		ID:          bs.ID,
 		Firstname:   bs.Firstname,
 		Lastname:    bs.Lastname,
@@ -32,7 +32,7 @@ func ToCustomerModel(bs domain.BusinessCustomer) models.Customer {
 	}
 }
 
-func ToBusinessCustomer(m models.Customer) domain.BusinessCustomer {
+func ToBusinessCustomer(m models.CustomerModel) domain.Customer {
 	var updatedAt *time.Time
 	if m.UpdatedAt.Valid == true {
 		updatedAt = &m.UpdatedAt.Time
@@ -40,7 +40,7 @@ func ToBusinessCustomer(m models.Customer) domain.BusinessCustomer {
 		updatedAt = nil
 	}
 
-	return domain.BusinessCustomer{
+	return domain.Customer{
 		ID:          m.ID,
 		Firstname:   m.Firstname,
 		Lastname:    m.Lastname,
@@ -54,7 +54,7 @@ func ToBusinessCustomer(m models.Customer) domain.BusinessCustomer {
 	}
 }
 
-func ApplyPatchCustomer(request dtos.CustomerPatchRequest, m *models.Customer) {
+func ApplyPatchCustomer(request dtos.CustomerPatchRequest, m *models.CustomerModel) {
 	if request.Firstname != nil {
 		m.Firstname = *request.Firstname
 	}

@@ -8,9 +8,9 @@ import (
 
 // CustomerService port d'entrée exposé par l'app à l'exterieur
 type InCustomerService interface {
-	CreateCustomer(ctx context.Context, bsCustomer domain.BusinessCustomer) (domain.BusinessCustomer, error)
-	GetCustomerByID(ctx context.Context, id int64) (domain.BusinessCustomer, error)
-	GetAllCustomers(ctx context.Context) ([]domain.BusinessCustomer, error)
-	PatchCustomer(ctx context.Context, id int64, patchCustomer domain.PatchBusinessCustomer) (domain.BusinessCustomer, error)
+	CreateCustomer(ctx context.Context, bsCustomer domain.Customer) (domain.Customer, error)
+	GetCustomerByID(ctx context.Context, id int64) (domain.Customer, error)
+	GetAllCustomers(ctx context.Context) ([]domain.Customer, error)
+	PatchCustomer(ctx context.Context, id int64, patchCustomer domain.PatchBusinessCustomer) (domain.Customer, error)
 	DeleteCustomer(ctx context.Context, id int64) error
 }

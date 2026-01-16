@@ -21,7 +21,7 @@ func NewCustomerRepositoryImpl(db *sql.DB) *CustomerRepositoryImpl {
 	return &CustomerRepositoryImpl{db: db}
 }
 
-func (cri *CustomerRepositoryImpl) SaveO(ctx context.Context, o models.Customer) (models.Customer, error) {
+func (cri *CustomerRepositoryImpl) SaveO(ctx context.Context, o models.CustomerModel) (models.CustomerModel, error) {
 	var query string = `
 	INSERT INTO customers (firstname,lastname,genda,email,phone_number,status,address_id,created_at,updated_at)
 	VALUES(
@@ -42,18 +42,18 @@ func (cri *CustomerRepositoryImpl) SaveO(ctx context.Context, o models.Customer)
 	).Scan(&o.ID)
 
 	if err != nil {
-		return models.Customer{}, err
+		return models.CustomerModel{}, err
 	}
 	return o, nil
 }
 
 // FindOByID implement interface CustomerRepository
-func (cri *CustomerRepositoryImpl) FindOByID(ctx context.Context, id int64) (models.Customer, error) {
+func (cri *CustomerRepositoryImpl) FindOByID(ctx context.Context, id int64) (models.CustomerModel, error) {
 	var query string = `
 	SELECT id,firstname,lastname,genda,email,phone_number,status,address_id,created_at,updated_at
 	FROM customers
 	WHERE id=$1`
-	var customer models.Customer
+	var customer models.CustomerModel
 	var err error = cri.db.QueryRowContext(ctx, query, id).Scan(
 		&customer.ID,
 		&customer.Firstname,
@@ -68,14 +68,14 @@ func (cri *CustomerRepositoryImpl) FindOByID(ctx context.Context, id int64) (mod
 	)
 
 	if err != nil {
-		return models.Customer{}, err
+		return models.CustomerModel{}, err
 	}
 
 	return customer, nil
 }
 
 // FindAllO implement interface CustomerRepository
-func (cri *CustomerRepositoryImpl) FindAllO(ctx context.Context) ([]models.Customer, error) {
+func (cri *CustomerRepositoryImpl) FindAllO(ctx context.Context) ([]models.CustomerModel, error) {
 	var query string = `
 	SELECT id,firstname,lastname,genda,email,phone_number,status,address_id,created_at,updated_at
 	 FROM customers`
@@ -83,9 +83,9 @@ func (cri *CustomerRepositoryImpl) FindAllO(ctx context.Context) ([]models.Custo
 	if err != nil {
 		return nil, err
 	}
-	var customers []models.Customer = make([]models.Customer, 0)
+	var customers []models.CustomerModel = make([]models.CustomerModel, 0)
 	for rows.Next() {
-		var customer models.Customer
+		var customer models.CustomerModel
 		err := rows.Scan(
 			&customer.ID,
 			&customer.Firstname,
@@ -113,7 +113,7 @@ func (cri *CustomerRepositoryImpl) FindAllO(ctx context.Context) ([]models.Custo
 }
 
 // UpdateO implement interface CustomerRepository
-func (cri *CustomerRepositoryImpl) UpdateO(ctx context.Context, id int64, o models.Customer) (models.Customer, error) {
+func (cri *CustomerRepositoryImpl) UpdateO(ctx context.Context, id int64, o models.CustomerModel) (models.CustomerModel, error) {
 	query := `UPDATE customers
 	SET
 		firstname=$1,
@@ -125,7 +125,7 @@ func (cri *CustomerRepositoryImpl) UpdateO(ctx context.Context, id int64, o mode
 	WHERE id=$7
 	RETURNING id, firstname, lastname, genda, email, phone_number, status, address_id, created_at, updated_at`
 
-	var updatedCustomer models.Customer
+	var updatedCustomer models.CustomerModel
 	var err error = cri.db.QueryRowContext(
 		ctx,
 		query,
@@ -149,7 +149,7 @@ func (cri *CustomerRepositoryImpl) UpdateO(ctx context.Context, id int64, o mode
 		&updatedCustomer.UpdatedAt,
 	)
 	if err != nil {
-		return models.Customer{}, fmt.Errorf("an error occurred %w", err)
+		return models.CustomerModel{}, fmt.Errorf("an error occurred %w", err)
 	}
 
 	return updatedCustomer, nil

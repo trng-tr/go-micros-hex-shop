@@ -1,4 +1,4 @@
--- Active: 1768157064002@@127.0.0.1@5432@goappdb
+-- Active: 1768501849859@@127.0.0.1@5433@goapp1db
     CREATE TABLE IF NOT EXISTS addresses (
         id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         street_number VARCHAR(10) NOT NULL,

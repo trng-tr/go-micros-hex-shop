@@ -1,5 +1,8 @@
-package contract
+package services
 
+/*en Go, les interfaces sont du côte de celui qui les utilise(DI)
+et non pas du coté de cui qui les implémente
+*/
 import "context"
 
 //XXXSaveAndReadOneORepository generic interface

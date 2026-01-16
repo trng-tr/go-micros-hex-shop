@@ -2,11 +2,11 @@ package dtos
 
 type AddressRequest struct {
 	StreetNumber *string `json:"street_number,omitempty" binding:"omitempty"`
-	StreetName   string  `json:"street_name" binding:"required,min=2"`
-	ZipCode      string  `json:"zip_code" binding:"required,min=4,max=10"`
-	City         string  `json:"city" binding:"required,min=2"`
-	Region       string  `json:"region" binding:"required,min=2"`
-	Country      string  `json:"country" binding:"required,min=2"`
+	StreetName   string  `json:"street_name" binding:"required"`
+	ZipCode      string  `json:"zip_code" binding:"required"`
+	City         string  `json:"city" binding:"required"`
+	Region       string  `json:"region" binding:"required"`
+	Country      string  `json:"country" binding:"required"`
 	Complement   *string `json:"complement,omitempty"`
 }
 
