@@ -24,17 +24,18 @@ func (r *Routes) RegisterApiRoutes() *gin.Engine {
 	api := engine.Group("/api/v1")
 	//for product service
 	api.POST("/products", r.phs.HandleSaveProduct)
-	api.GET("/products/:id", r.phs.HandleGetProductByID)
 	api.GET("/products", r.phs.HandleGetAllProducts)
+	api.GET("/products/:id", r.phs.HandleGetProductByID)
+	api.GET("/products/sku/:sku", r.phs.HandleGetProductBySku)
 	api.PATCH("/products/:id", r.phs.HandlePatchProduct)
 	api.DELETE("/products/:id", r.phs.HandleDeleteProduct)
-	api.GET("/products/sku/:sku", r.phs.HandleGetProductBySku)
 	//for stock service
-	api.POST("stocks", r.shs.HandleCreateStock)
-	api.GET("/stocks/:id", r.shs.HandleGetStockByID)
+	api.POST("/stocks", r.shs.HandleCreateStock)
 	api.GET("/stocks", r.shs.HandleGetAllStocks)
+	api.GET("/stocks/:id", r.shs.HandleGetStockByID)
 	api.PUT("/stocks/set-qte/:id", r.shs.HandleSetStockQuantity)
 	api.PUT("/stocks/increase-qte/:id", r.shs.HandleIncreaseStockQuantity)
 	api.PUT("/stocks/decrease-qte/:id", r.shs.HandleDecreaseStockQuantity)
+	api.GET("/products/:id/stock", r.shs.HandleGetStockByProductID)
 	return engine
 }

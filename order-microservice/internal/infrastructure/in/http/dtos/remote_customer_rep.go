@@ -1,9 +1,5 @@
 package dtos
 
-import (
-	"time"
-)
-
 type CustomerResponse struct {
 	ID              int64           `json:"id"`
 	Firstname       string          `json:"firstname"`
@@ -13,8 +9,8 @@ type CustomerResponse struct {
 	PhoneNumber     string          `json:"phone_number"`
 	Status          string          `json:"status"`
 	AddressResponse AddressResponse `json:"address"`
-	CreatedAt       time.Time       `json:"created_date"`
-	UpdatedAt       *time.Time      `json:"updated_date,omitempty"`
+	CreatedAt       string          `json:"created_date"`
+	UpdatedAt       *string         `json:"updated_date,omitempty"`
 }
 type AddressResponse struct {
 	ID           int64   `json:"id"`

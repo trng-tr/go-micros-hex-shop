@@ -7,7 +7,6 @@ import (
 
 	"github.com/trng-tr/product-microservice/internal/application/ports/out"
 	"github.com/trng-tr/product-microservice/internal/domain"
-	"github.com/trng-tr/product-microservice/internal/domain/validators"
 )
 
 // InProductServiceImpl implement InProductService
@@ -29,15 +28,15 @@ func (i *InProductServiceImpl) SaveProduct(ctx context.Context, prod domain.Prod
 		"description": prod.Description,
 	}
 
-	if err := validators.CheckProductInputs(inputFieds); err != nil {
+	if err := checkInputs(inputFieds); err != nil {
 		return domain.Product{}, err
 	}
 
-	if err := validators.CheckProdCategory(prod.Category); err != nil {
+	if err := checkProdCategory(prod.Category); err != nil {
 		return domain.Product{}, err
 	}
 
-	if err := validators.CheckPrice(prod.Price); err != nil {
+	if err := checkPrice(prod.Price); err != nil {
 		return domain.Product{}, err
 	}
 	prod.GenerateCreatedAt()
@@ -55,7 +54,7 @@ func (i *InProductServiceImpl) SaveProduct(ctx context.Context, prod domain.Prod
 
 // GetProductByID implement interface InProductService
 func (i *InProductServiceImpl) GetProductByID(ctx context.Context, id int64) (domain.Product, error) {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return domain.Product{}, err
 	}
 	bsPrd, err := i.outputPort.GetProductByID(ctx, id)
@@ -80,7 +79,7 @@ func (i *InProductServiceImpl) GetAllProducts(ctx context.Context) ([]domain.Pro
 
 // PatchProduct implement interface InProductService
 func (i *InProductServiceImpl) PatchProduct(ctx context.Context, id int64, patch domain.PatchProduct) (domain.Product, error) {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return domain.Product{}, err
 	}
 	product, err := i.outputPort.GetProductByID(ctx, id)
@@ -99,7 +98,7 @@ func (i *InProductServiceImpl) PatchProduct(ctx context.Context, id int64, patch
 
 // DeleteProduct implement interface InProductService
 func (i *InProductServiceImpl) DeleteProduct(ctx context.Context, id int64) error {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return err
 	}
 	if _, err := i.GetProductByID(ctx, id); err != nil {

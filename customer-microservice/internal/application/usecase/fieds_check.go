@@ -1,4 +1,4 @@
-package validators
+package usecase
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/trng-tr/customer-microservice/internal/domain"
 )
 
-func CheckInputFields(fileds map[string]string) error {
+func checkInputFields(fileds map[string]string) error {
 	for key, value := range fileds {
 		value = strings.TrimSpace(value)
 		if value == "" {
@@ -26,7 +26,7 @@ func CheckInputFields(fileds map[string]string) error {
 	return nil
 }
 
-func CheckEmailValid(email string) bool {
+func checkEmailValid(email string) bool {
 	if _, err := mail.ParseAddress(email); err != nil {
 		return false
 	} else if len(email) < 5 {
@@ -35,7 +35,7 @@ func CheckEmailValid(email string) bool {
 	return true
 }
 
-func CheckInputGenda(genda domain.Genda) error {
+func checkInputGenda(genda domain.Genda) error {
 	switch genda {
 	case domain.Female, domain.Male:
 		return nil
@@ -46,14 +46,14 @@ func CheckInputGenda(genda domain.Genda) error {
 	}
 }
 
-func CheckInputId(id int64) error {
+func checkInputId(id int64) error {
 	if id > 0 {
 		return nil
 	}
 	return fmt.Errorf("%w %d", errInvalidId, id)
 }
 
-func CheckPhoneValid(phone string) error {
+func checkPhoneValid(phone string) error {
 	var regex = regexp.MustCompile(`^\+?[0-9]{8,20}$`)
 	if regex.MatchString(phone) {
 		return nil
@@ -62,11 +62,11 @@ func CheckPhoneValid(phone string) error {
 	return fmt.Errorf("%w %s", errInvalidPhone, phone)
 }
 
-func GenerateDate() time.Time {
+func generateDate() time.Time {
 	return time.Now()
 }
 
-func CheckZipCode(zip string) error {
+func checkZipCode(zip string) error {
 	if len(zip) < 4 || len(zip) > 10 {
 		return fmt.Errorf("%w", errInvalidZipCode)
 	}

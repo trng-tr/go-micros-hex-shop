@@ -62,3 +62,11 @@ func (o *OutStockServiceImpl) UpdateStockQuantity(ctx context.Context, stock dom
 func utilMapp(model models.StockModel) domain.Stock {
 	return mappers.ToBusinessStock(model)
 }
+
+func (o *OutStockServiceImpl) GetStockByProductID(ctx context.Context, productID int64) (domain.Stock, error) {
+	model, err := o.repo.FindStockByProductID(ctx, productID)
+	if err != nil {
+		return domain.Stock{}, err
+	}
+	return utilMapp(model), nil
+}

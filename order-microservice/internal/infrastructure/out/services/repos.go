@@ -15,4 +15,5 @@ type OrderRepo interface {
 type OrderLineRepo interface {
 	Repository[models.OrderLineModel, int64]
 	Update(ctx context.Context, id int64, quantity int64) (models.OrderLineModel, error)
+	FindAllByOrderID(ctx context.Context, orderID int64) ([]models.OrderLineModel, error)
 }

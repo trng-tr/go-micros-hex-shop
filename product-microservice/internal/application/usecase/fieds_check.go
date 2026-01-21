@@ -1,4 +1,4 @@
-package validators
+package usecase
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/trng-tr/product-microservice/internal/domain"
 )
 
-func CheckProductInputs(fileds map[string]string) error {
+func checkInputs(fileds map[string]string) error {
 	for key, value := range fileds {
 		value = strings.TrimSpace(value)
 		if value == "" {
@@ -17,20 +17,18 @@ func CheckProductInputs(fileds map[string]string) error {
 		} else if len(value) > 255 {
 			return fmt.Errorf("%w %s", errTooLong, key)
 		}
-
 	}
-
 	return nil
 }
 
-func CheckInputId(id int64) error {
+func checkInputId(id int64) error {
 	if id > 0 {
 		return nil
 	}
 	return fmt.Errorf("%w %d", errInvalidId, id)
 }
 
-func CheckPrice(price domain.Price) error {
+func checkPrice(price domain.Price) error {
 	if price.UnitPrice <= 0 {
 		return fmt.Errorf("%w", errInvalidUnitPrice)
 	}
@@ -42,7 +40,7 @@ func CheckPrice(price domain.Price) error {
 	}
 }
 
-func CheckProdCategory(cat domain.Category) error {
+func checkProdCategory(cat domain.Category) error {
 	switch cat {
 	case domain.Book, domain.Clothing, domain.Shoes:
 		return nil
@@ -51,19 +49,24 @@ func CheckProdCategory(cat domain.Category) error {
 	}
 }
 
-func CheckStockInputs(fields map[string]int64) error {
+func checkStockName(name string) error {
+	if len(name) < 2 {
+		return fmt.Errorf("%w", errTooShort)
+	}
+	return nil
+}
+func checkStockInputs(fields map[string]int64) error {
 	for key, v := range fields {
 		if v <= 0 {
-			return fmt.Errorf("%w %s", errInvalidStockField, key)
+			return fmt.Errorf("%w:%v", errInvalidStockField, key)
 		}
 	}
 	return nil
 }
 
-func CheckInputStockQty(q int64) error {
+func checkInputStockQty(q int64) error {
 	if q <= 0 {
 		return fmt.Errorf("%w", errInvalidStockQty)
 	}
-
 	return nil
 }

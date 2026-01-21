@@ -28,3 +28,10 @@ const (
 	Dollar Currency = "USD"
 	Euro   Currency = "EUR"
 )
+
+type Stock struct {
+	ID        int64
+	Name      string
+	ProductID int64
+	Quantity  int64
+}

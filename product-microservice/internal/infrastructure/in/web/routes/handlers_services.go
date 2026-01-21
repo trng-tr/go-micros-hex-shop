@@ -22,4 +22,5 @@ type StockHanderService interface {
 	HandleSetStockQuantity(ctx *gin.Context)
 	HandleIncreaseStockQuantity(ctx *gin.Context)
 	HandleDecreaseStockQuantity(ctx *gin.Context)
+	HandleGetStockByProductID(ctx *gin.Context)
 }

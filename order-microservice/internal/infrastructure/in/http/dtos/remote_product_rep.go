@@ -14,3 +14,12 @@ type PriceResponse struct {
 	UnitPrice int64  `json:"unit_price"`
 	Currency  string `json:"currency"`
 }
+
+type StockResponse struct {
+	ID              int64           `json:"id"`
+	Name            string          `json:"name"`
+	ProductID       int64           `json:"product_id"`
+	Quantity        int64           `json:"stock_quantity"`
+	UpdatedAt       string          `json:"updated_at"`
+	ProductResponse ProductResponse `json:"product"`
+}

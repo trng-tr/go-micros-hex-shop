@@ -19,8 +19,9 @@ type ProductPatchRequest struct {
 }
 
 type StockRequest struct {
-	ProductID int64 `json:"product_id"`
-	Quantity  int64 `json:"quantity"`
+	Name      string `json:"stock_name"`
+	ProductID int64  `json:"product_id"`
+	Quantity  int64  `json:"quantity"`
 }
 
 // StockQuantityRequest struct to set,increase or decrease quantity of a stock

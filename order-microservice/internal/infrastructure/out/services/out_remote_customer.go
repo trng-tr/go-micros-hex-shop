@@ -23,7 +23,7 @@ func NewRemoteCustomerServiceImpl(baseUrl string) *RemoteCustomerServiceImpl {
 
 // GetRemoteOByID implements RemoteCustomerService
 func (o *RemoteCustomerServiceImpl) GetRemoteCustomerByID(ctx context.Context, id int64) (domain.Customer, error) {
-	remoteApiUrl := fmt.Sprintf(o.baseUrl+"/%d", id)
+	remoteApiUrl := fmt.Sprintf(o.baseUrl+"/customers/%d", id)
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, remoteApiUrl, nil)
 	if err != nil {
 		return domain.Customer{}, err

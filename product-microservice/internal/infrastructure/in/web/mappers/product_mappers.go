@@ -5,6 +5,8 @@ import (
 	"github.com/trng-tr/product-microservice/internal/infrastructure/in/web/dtos"
 )
 
+const dateFormate string = "2006-01-02 15:04:05"
+
 // ToBusinessProduct mapper for create request
 func ToBusinessProduct(request dtos.ProductRequest) domain.Product {
 	return domain.Product{
@@ -34,6 +36,12 @@ func ToProductResponse(bsProduct domain.Product) dtos.ProductResponse {
 		UnitPrice: bsProduct.Price.UnitPrice,
 		Currency:  mapCurrencyToSymbol(bsProduct),
 	}
+
+	var updatedAt *string
+	if bsProduct.UpdatedAt != nil {
+		s := bsProduct.UpdatedAt.Format(dateFormate)
+		updatedAt = &s
+	}
 	return dtos.ProductResponse{
 		ID:            bsProduct.ID,
 		Sku:           bsProduct.Sku,
@@ -41,8 +49,8 @@ func ToProductResponse(bsProduct domain.Product) dtos.ProductResponse {
 		ProductName:   bsProduct.ProductName,
 		Description:   bsProduct.Description,
 		PriceResponse: priceRensponse,
-		CreatedAt:     bsProduct.CreatedAt,
-		UpdatedAt:     bsProduct.UpdatedAt,
+		CreatedAt:     bsProduct.CreatedAt.Format(dateFormate),
+		UpdatedAt:     updatedAt,
 		IsActive:      bsProduct.IsActive,
 	}
 }

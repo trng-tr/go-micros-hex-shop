@@ -3,10 +3,10 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/trng-tr/product-microservice/internal/application/ports/out"
 	"github.com/trng-tr/product-microservice/internal/domain"
-	"github.com/trng-tr/product-microservice/internal/domain/validators"
 )
 
 // InStockServiceImpl implement InStockService
@@ -26,14 +26,18 @@ func (i *InStockServiceImpl) CreateStock(ctx context.Context, stk domain.Stock) 
 		"product_id": stk.ProductID,
 		"quantity":   stk.Quantity,
 	}
-	if err := validators.CheckStockInputs(inputFields); err != nil {
-
+	if err := checkStockInputs(inputFields); err != nil {
 		return domain.Stock{}, err
 	}
+
+	/*if err := checkStockName(stk.Name); err != nil {
+		return domain.Stock{}, err
+	}*/
 	if _, err := i.prodOutService.GetProductByID(ctx, stk.ProductID); err != nil {
 		return domain.Stock{}, fmt.Errorf("%w:%v", errObjectNotFound, err)
 	}
-	stk.GenerateUpdatedAt()
+
+	stk.UpdatedAt = time.Now()
 	//call output service to register stock
 	savedStock, err := i.stockOutService.CreateStock(ctx, stk)
 	if err != nil {
@@ -45,7 +49,7 @@ func (i *InStockServiceImpl) CreateStock(ctx context.Context, stk domain.Stock) 
 
 // GetStockByID implement interface InStockService
 func (i *InStockServiceImpl) GetStockByID(ctx context.Context, id int64) (domain.Stock, error) {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return domain.Stock{}, err
 	}
 	stock, err := i.stockOutService.GetStockByID(ctx, id)
@@ -68,10 +72,10 @@ func (i *InStockServiceImpl) GetAllStocks(ctx context.Context) ([]domain.Stock, 
 
 // SetStockProductQuantity implement interface InStockService
 func (i *InStockServiceImpl) SetStockQuantity(ctx context.Context, stockID int64, newQuantity int64) (domain.Stock, error) {
-	if err := validators.CheckInputId(stockID); err != nil {
+	if err := checkInputId(stockID); err != nil {
 		return domain.Stock{}, err
 	}
-	if err := validators.CheckInputStockQty(newQuantity); err != nil {
+	if err := checkInputStockQty(newQuantity); err != nil {
 		return domain.Stock{}, err
 	}
 	stock, err := i.GetStockByID(ctx, stockID)
@@ -89,10 +93,10 @@ func (i *InStockServiceImpl) SetStockQuantity(ctx context.Context, stockID int64
 
 // IncreaseStockProductQuantity implement interface InStockService
 func (i *InStockServiceImpl) IncreaseStockQuantity(ctx context.Context, stockID int64, quantity int64) (domain.Stock, error) {
-	if err := validators.CheckInputId(stockID); err != nil {
+	if err := checkInputId(stockID); err != nil {
 		return domain.Stock{}, err
 	}
-	if err := validators.CheckInputStockQty(quantity); err != nil {
+	if err := checkInputStockQty(quantity); err != nil {
 		return domain.Stock{}, err
 	}
 	stock, err := i.stockOutService.GetStockByID(ctx, stockID)
@@ -112,10 +116,10 @@ func (i *InStockServiceImpl) IncreaseStockQuantity(ctx context.Context, stockID 
 
 // IncreaseStockProductQuantity implement interface InStockService
 func (i *InStockServiceImpl) DecreaseStockQuantity(ctx context.Context, stockID int64, quantity int64) (domain.Stock, error) {
-	if err := validators.CheckInputId(stockID); err != nil {
+	if err := checkInputId(stockID); err != nil {
 		return domain.Stock{}, err
 	}
-	if err := validators.CheckInputStockQty(quantity); err != nil {
+	if err := checkInputStockQty(quantity); err != nil {
 		return domain.Stock{}, err
 	}
 	stock, err := i.stockOutService.GetStockByID(ctx, stockID)
@@ -124,7 +128,7 @@ func (i *InStockServiceImpl) DecreaseStockQuantity(ctx context.Context, stockID 
 	}
 	// ne pas autorisé le stock negatif d'un produit
 	if stock.Quantity-quantity < 0 {
-		return domain.Stock{}, fmt.Errorf("%w", ErrInsufficientStock)
+		return domain.Stock{}, fmt.Errorf("%w", errInsufficientStock)
 	}
 	stock.Quantity -= quantity //increase stock product quantity
 	//call output service to register stock with updated quantity
@@ -135,4 +139,16 @@ func (i *InStockServiceImpl) DecreaseStockQuantity(ctx context.Context, stockID 
 	}
 
 	return savedStock, nil
+}
+
+func (i *InStockServiceImpl) GetStockByProductID(ctx context.Context, productID int64) (domain.Stock, error) {
+	if err := checkInputId(productID); err != nil {
+		return domain.Stock{}, err
+	}
+	stock, err := i.stockOutService.GetStockByProductID(ctx, productID)
+	if err != nil {
+		return domain.Stock{}, fmt.Errorf("%w:%v", errOccured, err)
+	}
+
+	return stock, nil
 }

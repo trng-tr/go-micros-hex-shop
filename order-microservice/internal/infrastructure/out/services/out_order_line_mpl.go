@@ -51,9 +51,9 @@ func (o *OutOrderLineServiceImpl) GetAllOrderLines(ctx context.Context) ([]domai
 }
 
 // UpdateOrderLine implements OutOrderLineService
-func (o *OutOrderLineServiceImpl) UpdateOrderLine(ctx context.Context, id int64, orderLine domain.OrderLine) (domain.OrderLine, error) {
+func (o *OutOrderLineServiceImpl) UpdateOrderLine(ctx context.Context, orderLine domain.OrderLine) (domain.OrderLine, error) {
 	model := mappers.ToOrderLineModel(orderLine)
-	updatedOrderLine, err := o.repo.Update(ctx, id, model.Quantity)
+	updatedOrderLine, err := o.repo.Update(ctx, orderLine.ID, model.Quantity)
 	if err != nil {
 		return domain.OrderLine{}, err
 	}
@@ -67,4 +67,18 @@ func (o *OutOrderLineServiceImpl) DeleteOrderLine(ctx context.Context, id int64)
 		return err
 	}
 	return nil
+}
+
+// GetOrderLinesByOrderID implement OrderLineService interface
+func (o *OutOrderLineServiceImpl) GetOrderLinesByOrderID(ctx context.Context, orderID int64) ([]domain.OrderLine, error) {
+	models, err := o.repo.FindAllByOrderID(ctx, orderID)
+	if err != nil {
+		return nil, err
+	}
+	var orderLines []domain.OrderLine
+	for _, model := range models {
+		orderLines = append(orderLines, mappers.ToOrderLine(model))
+	}
+
+	return orderLines, nil
 }

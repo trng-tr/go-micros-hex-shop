@@ -20,6 +20,7 @@ type InOrderLineService interface {
 	IncreaseOrderLineQuantity(ctx context.Context, id int64, quantity int64) (domain.OrderLine, error)
 	DecreaseOrderLineQuantity(ctx context.Context, id int64, quantity int64) (domain.OrderLine, error)
 	DeleteOrderLine(ctx context.Context, id int64) error
+	GetOrderLinesByOrderID(ctx context.Context, orderID int64) ([]domain.OrderLine, error)
 }
 
 // RemoteCustomerService to get remote customer
@@ -30,4 +31,6 @@ type RemoteCustomerService interface {
 // RemoteProductService to get remote products
 type RemoteProductService interface {
 	GetRemoteProductByID(ctx context.Context, id int64) (domain.Product, error)
+	GetRemoteStockByProductID(ctx context.Context, prodID int64) (domain.Stock, error)
+	SetRemoteStockQuantity(ctx context.Context, stockID int64, newQuantity int64) error
 }

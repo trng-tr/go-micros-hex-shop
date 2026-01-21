@@ -5,18 +5,6 @@ import (
 	"github.com/trng-tr/order-microservice/internal/infrastructure/in/http/dtos"
 )
 
-func ToDomainCustomer(dtoResp dtos.CustomerResponse) domain.Customer {
-	return domain.Customer{
-		ID:          dtoResp.ID,
-		Firstname:   dtoResp.Firstname,
-		Lastname:    dtoResp.Lastname,
-		Genda:       domain.Genda(dtoResp.Genda),
-		Email:       dtoResp.Email,
-		PhoneNumber: dtoResp.PhoneNumber,
-		Status:      domain.CustomerStatus(dtoResp.Status),
-	}
-}
-
 func ToBusinessOrderLine(request dtos.OrderLineRequest) domain.OrderLine {
 	return domain.OrderLine{
 		ProductID: request.ProductID,
@@ -36,6 +24,7 @@ func ToOrderLineResponse(orderLine domain.OrderLine, product domain.Product) dto
 				UnitPrice: product.Price.UnitPrice,
 				Currency:  string(product.Price.Currency),
 			},
+			IsActive: product.IsActive,
 		},
 		Quantity: orderLine.Quantity,
 	}

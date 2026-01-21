@@ -19,12 +19,13 @@ func NewStockRepositoryImpl(db *sql.DB) *StockRepositoryImpl {
 
 // SaveO implement interface StockRepository
 func (s *StockRepositoryImpl) SaveO(ctx context.Context, o models.StockModel) (models.StockModel, error) {
-	var query = `INSERT INTO stocks (product_id,quantity,updated_at)
-	VALUES($1,$2,$3)
+	var query = `INSERT INTO stocks (name,product_id,quantity,updated_at)
+	VALUES($1,$2,$3,$4)
 	RETURNING id`
 	if err := s.db.QueryRowContext(
 		ctx,
 		query,
+		o.Name,
 		o.ProductID,
 		o.Quantity,
 		o.UpdatedAt,
@@ -37,12 +38,13 @@ func (s *StockRepositoryImpl) SaveO(ctx context.Context, o models.StockModel) (m
 
 // FindOByID implement interface StockRepository
 func (s *StockRepositoryImpl) FindOByID(ctx context.Context, id int64) (models.StockModel, error) {
-	query := `SELECT id,product_id,quantity,updated_at
+	query := `SELECT id,name,product_id,quantity,updated_at
 	FROM stocks
 	WHERE id=$1`
 	var stock models.StockModel
 	if err := s.db.QueryRowContext(ctx, query, id).Scan(
 		&stock.ID,
+		&stock.Name,
 		&stock.ProductID,
 		&stock.Quantity,
 		&stock.UpdatedAt,
@@ -55,23 +57,24 @@ func (s *StockRepositoryImpl) FindOByID(ctx context.Context, id int64) (models.S
 
 // FindAllO implement interface StockRepository
 func (s *StockRepositoryImpl) FindAllO(ctx context.Context) ([]models.StockModel, error) {
-	var query string = "SELECT id,product_id,quantity,updated_at FROM stocks"
+	var query string = "SELECT id,name,product_id,quantity,updated_at FROM stocks"
 	rows, err := s.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 	var stocks []models.StockModel = make([]models.StockModel, 0)
 	for rows.Next() {
-		var stk models.StockModel
+		var stock models.StockModel
 		if err := rows.Scan(
-			&stk.ID,
-			&stk.ProductID,
-			&stk.Quantity,
-			&stk.UpdatedAt,
+			&stock.ID,
+			&stock.Name,
+			&stock.ProductID,
+			&stock.Quantity,
+			&stock.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
-		stocks = append(stocks, stk)
+		stocks = append(stocks, stock)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -104,12 +107,30 @@ func (s *StockRepositoryImpl) UpdateStockQuantity(ctx context.Context, stockID i
 	var query = `UPDATE stocks 
 	SET quantity = $2
 	WHERE id = $1
-	RETURNING id,product_id,quantity,updated_at`
+	RETURNING id,name,product_id,quantity,updated_at`
 	var newStock models.StockModel
 	if err := s.db.QueryRowContext(ctx, query, stockID, quantity).Scan(
-		&newStock.ID, &newStock.ProductID, &newStock.Quantity, &newStock.UpdatedAt); err != nil {
+		&newStock.ID, &newStock.Name, &newStock.ProductID, &newStock.Quantity, &newStock.UpdatedAt); err != nil {
 		return models.StockModel{}, err
 	}
 
 	return newStock, nil
+}
+
+func (s *StockRepositoryImpl) FindStockByProductID(ctx context.Context, productID int64) (models.StockModel, error) {
+	query := `SELECT id,name,product_id,quantity,updated_at
+	FROM stocks
+	WHERE product_id=$1`
+	var stock models.StockModel
+	if err := s.db.QueryRowContext(ctx, query, productID).Scan(
+		&stock.ID,
+		&stock.Name,
+		&stock.ProductID,
+		&stock.Quantity,
+		&stock.UpdatedAt,
+	); err != nil {
+		return models.StockModel{}, err
+	}
+
+	return stock, nil
 }

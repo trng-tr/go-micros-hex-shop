@@ -5,6 +5,8 @@ import (
 	"github.com/trng-tr/customer-microservice/internal/infrastructure/in/http/dtos"
 )
 
+const dateFormat string = "2006-01-02 15:04:05"
+
 func ToBusinessCustomer(request dtos.CustomerRequest) domain.Customer {
 	return domain.Customer{
 		Firstname:   request.Firstname,
@@ -17,6 +19,11 @@ func ToBusinessCustomer(request dtos.CustomerRequest) domain.Customer {
 }
 
 func ToCustomerResponse(bs domain.Customer, bsAddress domain.Address) dtos.CustomerResponse {
+	var updatedDate *string
+	if bs.UpdatedAt != nil {
+		s := bs.UpdatedAt.Format(dateFormat)
+		updatedDate = &s
+	}
 	return dtos.CustomerResponse{
 		ID:              bs.ID,
 		Firstname:       bs.Firstname,
@@ -26,8 +33,8 @@ func ToCustomerResponse(bs domain.Customer, bsAddress domain.Address) dtos.Custo
 		PhoneNumber:     bs.PhoneNumber,
 		Status:          string(bs.Status),
 		AddressResponse: ToAddressResponse(bsAddress),
-		CreatedAt:       bs.CreatedAt,
-		UpdatedAt:       bs.UpdatedAt,
+		CreatedAt:       bs.CreatedAt.Format(dateFormat),
+		UpdatedAt:       updatedDate,
 	}
 }
 

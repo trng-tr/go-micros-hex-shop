@@ -10,6 +10,7 @@ func ToStockModel(bsStock domain.Stock) models.StockModel {
 
 	return models.StockModel{
 		ID:        bsStock.ID,
+		Name:      bsStock.Name,
 		ProductID: bsStock.ProductID,
 		Quantity:  bsStock.Quantity,
 		UpdatedAt: bsStock.UpdatedAt,
@@ -19,6 +20,7 @@ func ToStockModel(bsStock domain.Stock) models.StockModel {
 func ToBusinessStock(model models.StockModel) domain.Stock {
 	return domain.Stock{
 		ID:        model.ID,
+		Name:      model.Name,
 		ProductID: model.ProductID,
 		Quantity:  model.Quantity,
 		UpdatedAt: model.UpdatedAt,

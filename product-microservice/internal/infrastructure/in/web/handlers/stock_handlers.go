@@ -130,6 +130,24 @@ func (h *StockHandlerServiceImpl) HandleDecreaseStockQuantity(ctx *gin.Context) 
 	ctx.JSON(http.StatusOK, buildStokResponse(bsStock, bsProduct))
 }
 
+// HandleGetStockByProductID implement interface
+func (h *StockHandlerServiceImpl) HandleGetStockByProductID(ctx *gin.Context) {
+	id, ok := getId(ctx)
+	if !ok {
+		return
+	}
+	bsStock, err := h.stckInPort.GetStockByProductID(ctx.Request.Context(), id)
+	if ok := checkInternalServerError(err, ctx); !ok {
+		return
+	}
+	bsProduct, err := h.prodInPort.GetProductByID(ctx.Request.Context(), bsStock.ProductID)
+	if ok := checkInternalServerError(err, ctx); !ok {
+		return
+	}
+
+	ctx.JSON(http.StatusOK, buildStokResponse(bsStock, bsProduct))
+}
+
 func buildStokResponse(stock domain.Stock, product domain.Product) dtos.StockResponse {
 	return mappers.ToStockResponse(stock, product)
 }

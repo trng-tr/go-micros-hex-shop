@@ -16,8 +16,9 @@ type OutOrderLineService interface {
 	CreateOrderLine(ctx context.Context, orderLine domain.OrderLine) (domain.OrderLine, error)
 	GetOrderLineByID(ctx context.Context, id int64) (domain.OrderLine, error)
 	GetAllOrderLines(ctx context.Context) ([]domain.OrderLine, error)
-	UpdateOrderLine(ctx context.Context, id int64, orderLine domain.OrderLine) (domain.OrderLine, error)
+	UpdateOrderLine(ctx context.Context, orderLine domain.OrderLine) (domain.OrderLine, error)
 	DeleteOrderLine(ctx context.Context, id int64) error
+	GetOrderLinesByOrderID(ctx context.Context, orderID int64) ([]domain.OrderLine, error)
 }
 
 // RemoteCustomerService to get remote customer
@@ -28,4 +29,6 @@ type RemoteCustomerService interface {
 // RemoteProductService to get remote products
 type RemoteProductService interface {
 	GetRemoteProductByID(ctx context.Context, id int64) (domain.Product, error)
+	GetRemoteStockByProductID(ctx context.Context, prodID int64) (domain.Stock, error)
+	SetRemoteStockQuantity(ctx context.Context, stock domain.Stock) error
 }

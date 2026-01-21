@@ -22,6 +22,7 @@ type OutStockService interface {
 	GetStockByID(ctx context.Context, id int64) (domain.Stock, error)
 	GetAllStocks(ctx context.Context) ([]domain.Stock, error)
 	UpdateStockQuantity(ctx context.Context, stock domain.Stock) (domain.Stock, error)
+	GetStockByProductID(ctx context.Context, productID int64) (domain.Stock, error)
 }
 
 // OutGenerateSkuService service pour générer un sku du produit

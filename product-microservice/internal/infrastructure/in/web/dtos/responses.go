@@ -11,8 +11,8 @@ type ProductResponse struct {
 	ProductName   string        `json:"product_name"`
 	Description   string        `json:"description"`
 	PriceResponse PriceResponse `json:"price"`
-	CreatedAt     time.Time     `json:"ceated_at"`
-	UpdatedAt     *time.Time    `json:"updated_at,omitempty"`
+	CreatedAt     string        `json:"ceated_at"`
+	UpdatedAt     *string       `json:"updated_at,omitempty"`
 	IsActive      bool          `json:"is_active"`
 }
 
@@ -23,9 +23,10 @@ type PriceResponse struct {
 
 type StockResponse struct {
 	ID              int64           `json:"id"`
+	Name            string          `json:"stock_name"`
 	ProductId       int64           `json:"product_id"`
 	Quantity        int64           `json:"stock_quantity"`
-	UpdatedAt       time.Time       `json:"updated_at"`
+	UpdatedAt       string          `json:"updated_at"`
 	ProductResponse ProductResponse `json:"product"`
 }
 

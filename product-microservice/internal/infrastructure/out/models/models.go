@@ -20,6 +20,7 @@ type ProductModel struct {
 
 type StockModel struct {
 	ID        int64
+	Name      string
 	ProductID int64
 	Quantity  int64
 	UpdatedAt time.Time

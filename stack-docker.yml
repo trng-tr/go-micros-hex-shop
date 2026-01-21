@@ -14,7 +14,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${CUSTOMER_DB_USER} -d ${CUSTOMER_DB_NAME}"]
       interval: 5s
-      timeout: 3s
+      timeout: 5s
       retries: 10
     networks: [go-backend-net]
   # products db
@@ -29,7 +29,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${PRODUCT_DB_USER} -d ${PRODUCT_DB_NAME}"]
       interval: 5s
-      timeout: 3s
+      timeout: 5s
       retries: 10
     networks: [go-backend-net]
     volumes: [pgproductdata:/var/lib/postgresql/data]
@@ -43,11 +43,17 @@ services:
       POSTGRES_PASSWORD: ${ORDER_DB_PWD}
       POSTGRES_DB: ${ORDER_DB_NAME}
     volumes: [pgorderdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ${ORDER_DB_USER} -d ${ORDER_DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks: [go-backend-net]
  
  # ------ go backend servers (microservices apis) ----------------
  #customer microservice
   go-micros-hexa-customer:
+    image: localhost:5000/go-micros-hex-customer
     container_name: go-micros-hex-customer
     build:
       context: ./customer-microservice
@@ -63,6 +69,7 @@ services:
       CUSTOMER_DB_URL: ${CUSTOMER_DB_URL}
   #product microservice
   go-micros-hexa-product:
+    image: localhost:5000/go-micros-hex-product
     container_name: go-micros-hexa-product
     build:
       context: ./product-microservice
@@ -77,6 +84,21 @@ services:
       pg-product-db:
         condition: service_healthy
   #order moicroservice
+  go-micros-hexa-order:
+    image: localhost:5000/go-micros-hex-order
+    container_name: go-micros-hex-order
+    build:
+      context: ./order-microservice
+      dockerfile: Dockerfile
+    ports: ["8083:8083"]
+    environment:
+      APP_HOSTNAME: ${APP_HOSTNAME}
+      APP3_HOSTPORT: ${APP3_HOSTPORT}
+      ORDER_DB_URL: ${ORDER_DB_URL}
+    depends_on:
+      pg-order-db:
+        condition: service_healthy
+    networks: [go-backend-net]
 #volumes
 volumes:
   pgcustomerdata:

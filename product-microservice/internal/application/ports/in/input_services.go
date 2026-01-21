@@ -22,4 +22,5 @@ type InStockService interface {
 	SetStockQuantity(ctx context.Context, stockID int64, newQuantity int64) (domain.Stock, error)   //replace quantity
 	IncreaseStockQuantity(ctx context.Context, stockID int64, quantity int64) (domain.Stock, error) // encrease
 	DecreaseStockQuantity(ctx context.Context, stockID int64, quantity int64) (domain.Stock, error) //decrease
+	GetStockByProductID(ctx context.Context, productID int64) (domain.Stock, error)
 }

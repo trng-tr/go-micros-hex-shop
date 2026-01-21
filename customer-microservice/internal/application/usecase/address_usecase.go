@@ -7,7 +7,6 @@ import (
 
 	"github.com/trng-tr/customer-microservice/internal/application/ports/out"
 	"github.com/trng-tr/customer-microservice/internal/domain"
-	"github.com/trng-tr/customer-microservice/internal/domain/validators"
 )
 
 /*
@@ -32,11 +31,11 @@ func (iasi *InAddressServiceImpl) CreateAddress(ctx context.Context, bsAddress d
 		"region":      bsAddress.Region,
 		"country":     bsAddress.Country,
 	}
-	var err error = validators.CheckInputFields(inputFields)
+	var err error = checkInputFields(inputFields)
 	if err != nil {
 		return domain.Address{}, err
 	}
-	if err := validators.CheckZipCode(bsAddress.ZipCode); err != nil {
+	if err := checkZipCode(bsAddress.ZipCode); err != nil {
 		return domain.Address{}, err
 	}
 	// send business object to outside using output port
@@ -50,7 +49,7 @@ func (iasi *InAddressServiceImpl) CreateAddress(ctx context.Context, bsAddress d
 
 // GetAddressByID implement InAddressService interface
 func (iasi *InAddressServiceImpl) GetAddressByID(ctx context.Context, id int64) (domain.Address, error) {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return domain.Address{}, err
 	}
 	//call output port to retried business address object
@@ -77,7 +76,7 @@ func (iasi *InAddressServiceImpl) GetAllAddresses(ctx context.Context) ([]domain
 
 // DeleteAddress implement InAddressService interface
 func (iasi *InAddressServiceImpl) DeleteAddress(ctx context.Context, id int64) error {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return fmt.Errorf("error: delete address failed %w", err)
 	}
 	if err := iasi.outService.DeleteAddress(ctx, id); err != nil {

@@ -6,7 +6,6 @@ import (
 
 	"github.com/trng-tr/customer-microservice/internal/application/ports/out"
 	"github.com/trng-tr/customer-microservice/internal/domain"
-	"github.com/trng-tr/customer-microservice/internal/domain/validators"
 )
 
 /*
@@ -32,20 +31,20 @@ func (icsi *InCustomerServiceImpl) CreateCustomer(ctx context.Context, bsCustome
 		"email":     bsCustomer.Email,
 		"phone":     bsCustomer.PhoneNumber,
 	}
-	if err := validators.CheckInputFields(inputFields); err != nil {
+	if err := checkInputFields(inputFields); err != nil {
 		return domain.Customer{}, err
 	}
-	if err := validators.CheckInputGenda(bsCustomer.Genda); err != nil {
+	if err := checkInputGenda(bsCustomer.Genda); err != nil {
 		return domain.Customer{}, err
 	}
-	if ok := validators.CheckEmailValid(bsCustomer.Email); !ok {
+	if ok := checkEmailValid(bsCustomer.Email); !ok {
 		return domain.Customer{}, fmt.Errorf("error: invalid input email %s", bsCustomer.Email)
 	}
-	if err := validators.CheckPhoneValid(bsCustomer.PhoneNumber); err != nil {
+	if err := checkPhoneValid(bsCustomer.PhoneNumber); err != nil {
 		return domain.Customer{}, err
 	}
 
-	bsCustomer.CreatedAt = validators.GenerateDate()
+	bsCustomer.CreatedAt = generateDate()
 	bsCustomer.Status = domain.Active
 	//check address
 	if _, err := icsi.outAddressSvc.GetAddressByID(ctx, bsCustomer.AddressID); err != nil {
@@ -62,7 +61,7 @@ func (icsi *InCustomerServiceImpl) CreateCustomer(ctx context.Context, bsCustome
 
 // GetCustomerByID implement interface InCustomerService
 func (icsi *InCustomerServiceImpl) GetCustomerByID(ctx context.Context, id int64) (domain.Customer, error) {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return domain.Customer{}, err
 	}
 
@@ -83,7 +82,7 @@ func (icsi *InCustomerServiceImpl) GetAllCustomers(ctx context.Context) ([]domai
 
 // UpdateCustomer implement interface InCustomerService
 func (icsi *InCustomerServiceImpl) PatchCustomer(ctx context.Context, id int64, patchCustomer domain.PatchBusinessCustomer) (domain.Customer, error) {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return domain.Customer{}, err
 	}
 	businessCustomer, err := icsi.outCustomerSvc.GetCustomerByID(ctx, id)
@@ -103,7 +102,7 @@ func (icsi *InCustomerServiceImpl) PatchCustomer(ctx context.Context, id int64, 
 
 // DeleteCustomer implement interface InCustomerService
 func (icsi *InCustomerServiceImpl) DeleteCustomer(ctx context.Context, id int64) error {
-	if err := validators.CheckInputId(id); err != nil {
+	if err := checkInputId(id); err != nil {
 		return err
 	}
 

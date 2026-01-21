@@ -12,11 +12,11 @@ type OrderRequest struct {
 }
 
 type OrderResponse struct {
-	ID               int64                 `json:"id"`
-	CustomerResponse LightCustomerResponse `json:"customer"`
-	Status           string                `json:"order_status"`
-	OrderLines       []OrderLineResponse   `json:"lines"`
-	CreatedAt        time.Time             `json:"created_at"`
+	ID                  int64                 `json:"id"`
+	CustomerResponse    LightCustomerResponse `json:"customer"`
+	Status              string                `json:"order_status"`
+	OrderLinesResponses []OrderLineResponse   `json:"lines"`
+	CreatedAt           string                `json:"created_at"`
 }
 
 type OrderLineResponse struct {
@@ -35,6 +35,6 @@ func NewResponse(status, message string) *Response {
 	return &Response{
 		Status:    status,
 		Message:   message,
-		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
+		CreatedAt: time.Now().Format(time.RFC3339),
 	}
 }
