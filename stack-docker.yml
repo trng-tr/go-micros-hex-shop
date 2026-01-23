@@ -56,8 +56,8 @@ services:
  # ------ go backend servers (microservices apis) ----------------
  #customer microservice
   go-micros-hexa-customer:
-    image: localhost:5000/go-micros-hex-customer
-    container_name: go-micros-hex-customer
+    image: localhost:5000/go-micros-hexa-customer
+    container_name: go-micros-hexa-customer
     build:
       context: ./customer-microservice
       dockerfile: Dockerfile
@@ -72,7 +72,7 @@ services:
       CUSTOMER_DB_URL: ${CUSTOMER_DB_URL}
   #product microservice
   go-micros-hexa-product:
-    image: localhost:5000/go-micros-hex-product
+    image: localhost:5000/go-micros-hexa-product
     container_name: go-micros-hexa-product
     build:
       context: ./product-microservice
@@ -88,8 +88,8 @@ services:
         condition: service_healthy
   #order moicroservice
   go-micros-hexa-order:
-    image: localhost:5000/go-micros-hex-order
-    container_name: go-micros-hex-order
+    image: localhost:5000/go-micros-hexa-order
+    container_name: go-micros-hexa-order
     build:
       context: ./order-microservice
       dockerfile: Dockerfile
