@@ -224,7 +224,7 @@ Gérer le **catalogue produit**, les **stocks** et les **localisations**.
 - GET /api/v1/locations/{id}
 - GET /api/v1/stocks
 - GET /api/v1/stocks/locations/{locationId}/products/{productId}
-- PUT /api/v1/stocks/locations/{locationId}/products/{productId}/set-qte
+- PUT /api/v1/stocks/locations/{locationId}/products/{productId}/set-qte  
 Body json attendu pour la mise à jour (PUT) :
 ```
 {
