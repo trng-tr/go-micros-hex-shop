@@ -4,7 +4,7 @@ services:
   kong-api-gateway:
    hostname: kong-api-gateway
    container_name: kong-api-gateway
-   image: kong:alpine
+   image: ${KONG_API_GATEWAY}
    environment:
      KONG_DATABASE: "off"
      KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yml"
@@ -45,7 +45,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    networks: [private-backend-net]
+    networks: [private-backend-net, public-backend-net]
     restart: unless-stopped
   # products db
   pg-product-db:
@@ -61,7 +61,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    networks: [private-backend-net] # accessible qu'entre les containers et non à l'exterieur
+    networks: [private-backend-net, public-backend-net]
     volumes: [pgproductdata:/var/lib/postgresql/data]
     restart: unless-stopped
   #orders db 
@@ -79,7 +79,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    networks: [private-backend-net] # accessible qu'entre les containers et non à l'exterieur
+    networks: [private-backend-net, public-backend-net]
     restart: unless-stopped
  
  # ------ go backend servers (microservices apis) ----------------
