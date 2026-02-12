@@ -307,8 +307,8 @@ Gérer les **commandes** et orchestrer les appels vers les autres microservices.
 
 ## Démarrage
 - Récupérer le repo git `git clone -b main https://github.com/trng-tr/go-micros-hex.git`
-- Rentrer à la racine et builder pour construire `docker compose -f stack-docker.yaml build`
-- Lancer la stack via stack-docker.yml `docker compose -f stack-docker.yaml up -d`
+- Aller à la racine (contexte) de l'application et builder les sources pour construire les images dockers: `docker compose -f stack-docker.yaml build`
+- Lancer la stack via stack-docker.yml: `docker compose -f stack-docker.yaml up -d`
 - Vérifier la disponibilité de Kong et des microservices
 - Utiliser Kong comme point d’entrée principal
 
@@ -334,6 +334,7 @@ Les erreurs sont renvoyées sous forme :
 }
 
 ```
+
 
 
 
