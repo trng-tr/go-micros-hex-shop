@@ -1,27 +1,27 @@
-# HexaShop : Microservices + Archi Hexagonale
+# go-micros-hexa-shop : Microservices + Archi Hexagonale
 
 # 1. Présentation générale
 
-Le projet **go-micros-hex** est un écosystème de microservices écrit en **Go**, structuré selon les principes de l’**architecture hexagonale (Ports & Adapters)**.  
-Il illustre une plateforme de type e-commerce modulaire, avec séparation claire des responsabilités métier, techniques et d’orchestration.
+Le projet **go-micros-hexa-shop** est un écosystème de microservices écrit en langage **Go**, structuré selon les principes de l'**architecture hexagonale: Ports & Adapters**.  
+Il illustre une plateforme de type e-commerce modulaire, avec séparation claire des responsabilités métier, techniques et d'orchestration.
 
-L’architecture repose sur :
-- des microservices indépendants
+L'architecture repose sur :
+- des microservices indépendants: **customer** / **Product** / **Order**
 - une base de données par microservice
-- une **API Gateway Kong** comme point d’entrée unique
-- des échanges synchrones REST entre services
+- une **API Gateway Kong** comme point d'entrée unique
+- des échanges synchrones REST entre microservices
 
 ---
 
-# 2. Fonction principale (vision système)
+# 2. Fonction principale de go-micros-hexa-shop
 
-La fonction principale du système est de **gérer le cycle de vie d’une commande client**, depuis la validation des produits et du stock jusqu’à la persistance de la commande, dans un environnement distribué.
+La fonction principale de l'application **go-micros-hexa-shop** est de **gérer le cycle de vie d'une commande client**, depuis la validation du customer, des produits et du stock jusqu'à la persistance de la commande, dans un environnement distribué.
 
-Le système permet :
-- la gestion des clients
-- la gestion des produits, stocks et localisations
-- la création de commandes avec vérification du stock
-- la mise à jour des quantités disponibles
+L'application **go-micros-hexa-shop** :
+- la gestion des clients: customer-microservice
+- la gestion des produits, stocks et localisations: product-microservice
+- la création de commandes avec vérification du state du produit et la quantité du produit en stock: order-microservice
+- la mise à jour des quantités disponibles après qu'une commande est validée: couple (order-microservice, product-microservice)
 
 ---
 
@@ -310,4 +310,5 @@ Les erreurs sont renvoyées sous forme :
   "message": "description",
   "created_at": "ISO_DATE"
 }
+
 ```
